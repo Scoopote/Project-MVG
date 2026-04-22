@@ -1,9 +1,6 @@
-const path = require('path');
-const Thing = require('./models/thing');
 const express = require('express');
 const mongoose = require('mongoose');
-
-app.use('/images', express.static(path.join(__dirname, 'images')));
+const path = require('path');
 
 const stuffRoutes = require('./routes/stuff');
 const userRoutes = require('./routes/user');
@@ -28,6 +25,8 @@ async function connectMongo() {
 connectMongo();
 
 app.use(express.json());
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
