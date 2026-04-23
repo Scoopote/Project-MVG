@@ -16,7 +16,7 @@ const app = express();
 async function connectMongo() {
   try {
     await mongoose.connect(
-      `mongodb+srv://Scoopote:${process.env.PASSWORD}@cluster0.exbirdc.mongodb.net/mvg?retryWrites=true&w=majority`,
+      `mongodb+srv://Scoopote:${process.env.PASSWORD}@cluster0.xytjy5r.mongodb.net/mvg?retryWrites=true&w=majority`,
       {
         serverSelectionTimeoutMS: 5000
       }
