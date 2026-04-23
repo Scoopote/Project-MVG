@@ -3,7 +3,7 @@ const fs = require('fs');
 const Thing = require('../models/thing');
 
 exports.createThing = (req, res, next) => {
-  const thingObject = JSON.parse(req.body.thing);
+  const thingObject = (req.body.thing);
   delete thingObject._id;
   delete thingObject._userId;
 
@@ -19,19 +19,25 @@ exports.createThing = (req, res, next) => {
 };
 
 exports.getOneThing = (req, res, next) => {
+  const id = req.params.id;
+
+  if (!id) {
+    res.status(400).json({ message: "Erreur l'id invalide ou inexistante" });
+  }
+
   Thing.findOne({ _id: req.params.id })
     .then((thing) => {
       res.status(200).json(thing);
     })
     .catch((error) => {
-      res.status(404).json({ error });
+      res.status(500).json({ error });
     });
 };
 
 exports.modifyThing = (req, res, next) => {
   const thingObject = req.file
     ? {
-        ...JSON.parse(req.body.thing),
+        ...(req.body.thing),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
       }
     : { ...req.body };

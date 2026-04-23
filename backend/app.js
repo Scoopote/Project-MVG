@@ -1,6 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const dotenv = require('dotenv');
+const dns = require("node:dns/promises");
+
+dotenv.config();
+
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 const stuffRoutes = require('./routes/stuff');
 const userRoutes = require('./routes/user');
@@ -10,7 +16,7 @@ const app = express();
 async function connectMongo() {
   try {
     await mongoose.connect(
-      'mongodb+srv://Scoopote:TrolilolDu31@cluster0.xytjy5r.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0',
+      `mongodb+srv://Scoopote:${process.env.PASSWORD}@cluster0.exbirdc.mongodb.net/mvg?retryWrites=true&w=majority`,
       {
         serverSelectionTimeoutMS: 5000
       }
@@ -41,7 +47,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/stuff', stuffRoutes);
+app.use('/api/books', stuffRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;
