@@ -1,6 +1,6 @@
 const fs = require('fs');
 // backend/controllers/stuff.js
-const Thing = require('../models/thing');
+const Thing = require('../models/book');
 
 exports.createThing = (req, res, next) => {
   const thingObject = (req.body.thing);
