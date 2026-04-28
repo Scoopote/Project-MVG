@@ -8,7 +8,7 @@ dotenv.config();
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
-const stuffRoutes = require('./routes/stuff');
+const bookRoutes = require('./routes/book');
 const userRoutes = require('./routes/user');
 
 const app = express();
@@ -47,7 +47,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/books', stuffRoutes);
+app.use('/api/books', bookRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;
