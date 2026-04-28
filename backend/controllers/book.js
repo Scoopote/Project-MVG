@@ -1,31 +1,56 @@
 const fs = require("fs");
 const Book = require("../models/book");
+const sharp = require("sharp");
 
 // Créer un livre
-exports.createBook = (req, res, next) => {
+exports.createBook = async (req, res, next) => {
   let bookObject;
   try {
     bookObject = JSON.parse(req.body.book);
   } catch (error) {
     return res.status(400).json({ message: "JSON invalide dans le corps de la requête." });
   }
-
   delete bookObject._id;
 
   const initialGrade = Number(bookObject.ratings?.[0]?.grade);
   const validGrade = !isNaN(initialGrade) ? initialGrade : 0;
 
+  let imageUrl = req.file
+    ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+    : "";
+
   const book = new Book({
     ...bookObject,
     userId: req.auth.userId,
-    imageUrl: req.file ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}` : "",
+    imageUrl,
     ratings: [{ userId: req.auth.userId, grade: validGrade }],
     averageRating: validGrade,
   });
 
-  book.save()
-    .then(() => res.status(201).json({ message: "Livre enregistré !" }))
-    .catch((error) => res.status(400).json({ message: "Erreur lors de l'enregistrement du livre." }));
+  try {
+    
+    if (req.file) {
+      const inputPath = req.file.path; 
+      const outputPath = `images/optimized_${req.file.filename}`;
+
+      await sharp(inputPath)
+        .resize(500, 500, { fit: "cover" }) 
+        .jpeg({ quality: 80 }) 
+        .toFile(outputPath);
+
+      
+      fs.unlinkSync(inputPath);
+
+      
+      book.imageUrl = `${req.protocol}://${req.get("host")}/images/optimized_${req.file.filename}`;
+    }
+
+    await book.save();
+    res.status(201).json({ message: "Livre enregistré !" });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ message: "Erreur lors de l'enregistrement du livre." });
+  }
 };
 
 // Récupérer tous les livres
