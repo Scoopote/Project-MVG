@@ -32,12 +32,6 @@ exports.createBook = async (req, res, next) => {
       const inputPath = req.file.path; 
       const outputPath = `images/optimized_${req.file.filename}`;
 
-      await sharp(inputPath)
-        .resize(500, 500, { fit: "cover" }) 
-        .jpeg({ quality: 80 }) 
-        .toFile(outputPath);
-
-      
       fs.unlinkSync(inputPath);
 
       
