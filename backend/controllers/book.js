@@ -1,6 +1,5 @@
 const fs = require("fs");
 const Book = require("../models/book");
-const sharp = require("sharp");
 
 // Créer un livre
 exports.createBook = async (req, res, next) => {
