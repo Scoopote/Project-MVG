@@ -15,12 +15,9 @@ const app = express();
 
 async function connectMongo() {
   try {
-    await mongoose.connect(
-      `mongodb+srv://Scoopote:${process.env.PASSWORD}@cluster0.xytjy5r.mongodb.net/mvg?retryWrites=true&w=majority`,
-      {
-        serverSelectionTimeoutMS: 5000
-      }
-    );
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 5000
+    });
     console.log('Connexion à MongoDB réussie !');
   } catch (error) {
     console.log('Connexion à MongoDB échouée !');

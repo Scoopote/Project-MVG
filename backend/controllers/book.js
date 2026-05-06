@@ -11,6 +11,7 @@ exports.createBook = (req, res, next) => {
       .status(400)
       .json({ message: "JSON invalide dans le corps de la requête." });
   }
+
   delete bookObject._id;
 
   const initialGrade = Number(bookObject.ratings?.[0]?.grade);
@@ -28,25 +29,35 @@ exports.createBook = (req, res, next) => {
     averageRating: validGrade,
   });
 
+  console.log("Livre à enregistrer :", book);
+
   book
     .save()
-    .then(() => res.status(201).json({ message: "Livre enregistré !" }))
-    .catch((error) =>
+    .then((savedBook) => {
+      console.log("Livre enregistré en base :", savedBook);
+      res.status(201).json({ message: "Livre enregistré !" });
+    })
+    .catch((error) => {
+      console.log("Erreur save book :", error);
       res
         .status(400)
-        .json({ message: "Erreur lors de l'enregistrement du livre." })
-    );
+        .json({ message: "Erreur lors de l'enregistrement du livre.", error });
+    });
 };
 
 // Récupérer tous les livres
 exports.getAllBooks = (req, res, next) => {
   Book.find()
-    .then((books) => res.status(200).json(books))
-    .catch((error) =>
+    .then((books) => {
+      console.log("Livres trouvés :", books);
+      res.status(200).json(books);
+    })
+    .catch((error) => {
+      console.log("Erreur getAllBooks :", error);
       res
         .status(400)
-        .json({ message: "Erreur lors de la récupération des livres." })
-    );
+        .json({ message: "Erreur lors de la récupération des livres.", error });
+    });
 };
 
 // Récupérer un seul livre
