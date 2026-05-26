@@ -2,7 +2,6 @@ const multer = require('multer');
 const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
-require('dotenv').config();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage }).single('image');
@@ -29,8 +28,8 @@ module.exports = (req, res, next) => {
       const outputPath = path.join(outputDir, fileName);
 
       await sharp(req.file.buffer)
-        .resize(parseInt(process.env.IMAGE_WIDTH) || 800)
-        .webp({ quality: parseInt(process.env.IMAGE_QUALITY) || 80 })
+        .resize(parseInt(800))
+        .webp({ quality: parseInt(80) })
         .toFile(outputPath);
 
       req.file.filename = fileName;
