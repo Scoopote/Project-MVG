@@ -6,7 +6,6 @@ const fs = require('fs');
 const storage = multer.memoryStorage();
 const upload = multer({ storage }).single('image');
 
-// Dossier de sortie
 const outputDir = path.join(__dirname, '..', 'images');
 
 module.exports = (req, res, next) => {
@@ -28,8 +27,9 @@ module.exports = (req, res, next) => {
       const outputPath = path.join(outputDir, fileName);
 
       await sharp(req.file.buffer)
-        .resize(parseInt(800))
-        .webp({ quality: parseInt(80) })
+        .rotate()
+        .resize(800, null, { withoutEnlargement: true })
+        .webp({ quality: 80 })
         .toFile(outputPath);
 
       req.file.filename = fileName;
