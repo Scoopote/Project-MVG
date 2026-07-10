@@ -27,6 +27,7 @@ module.exports = (req, res, next) => {
       const outputPath = path.join(outputDir, fileName);
 
       await sharp(req.file.buffer)
+        .rotate()
         .resize(800, null, { withoutEnlargement: true })
         .webp({ quality: 80 })
         .toFile(outputPath);
